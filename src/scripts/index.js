@@ -2,8 +2,7 @@ import '../pages/index.css'
 import {initialCards} from "../components/cards.js"
 import {createCard, deleteCard, likeCard} from "../components/card.js"
 import {openPopup,
-        closePopup, 
-        openImagePopup} from "../components/modal.js"
+        closePopup} from "../components/modal.js"
 
 
 const cardsList =
@@ -27,12 +26,30 @@ const nameInput =
 const jobInput =
  formEditElement.querySelector('.popup__input_type_description');
 
+ const profileTitle = 
+ document.querySelector('.profile__title');
+
+const profileDescription = 
+ document.querySelector('.profile__description');
+
 const formNewPlaceElement =
  document.forms['new-place'];
 const descriptionNewPlaceInput =
  formNewPlaceElement['place-name'];
 const srcNewPlaceInput =
  formNewPlaceElement['link'];
+
+
+const imagePopup = document.querySelector('.popup_type_image');
+const imagePopupImg = imagePopup.querySelector('.popup__image');
+const imagePopupCaption = imagePopup.querySelector('.popup__caption');
+ 
+function openImagePopup(src, description){
+  imagePopupImg.src = src;
+  imagePopupImg.alt = description;
+  imagePopupCaption.textContent = description;
+  openPopup(imagePopup);
+}
 
 
 function createPageItems(){
@@ -45,12 +62,6 @@ function createPageItems(){
 
 function handleEditProfileFormSubmit(evt){
   evt.preventDefault();
-
-  const profileTitle = 
-   document.querySelector('.profile__title');
-
-  const profileDescription = 
-   document.querySelector('.profile__description');
 
   profileTitle.textContent =
    nameInput.value;
@@ -73,18 +84,32 @@ function handleNewPlaceFormSubmit(evt){
   formNewPlaceElement.reset();
   closePopup(addContentToProfilePopup);
 }
+
+function openEditPopup(){
+  openPopup(profileEditPopup);
+
+  nameInput.value = profileTitle.textContent;
+  jobInput.value = profileDescription.textContent;
+}
+
+function openAddContentPopup(){
+  openPopup(addContentToProfilePopup);
+  formNewPlaceElement.reset(); 
+}
 //--------------------------------------------------------------
 
 createPageItems();
 
 editProfileButton.addEventListener('click',
-     ()=>{openPopup(profileEditPopup, formEditElement);});
+  openEditPopup);
+
 formEditElement.addEventListener('submit',
-    handleEditProfileFormSubmit); 
+  handleEditProfileFormSubmit); 
           
 addContentToProfileButton.addEventListener('click',
-    ()=>{openPopup(addContentToProfilePopup, formNewPlaceElement);});
+  openAddContentPopup);
+
 formNewPlaceElement.addEventListener('submit',
-    handleNewPlaceFormSubmit); 
+  handleNewPlaceFormSubmit);
 
 
