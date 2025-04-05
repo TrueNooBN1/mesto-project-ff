@@ -1,11 +1,11 @@
 import '../pages/index.css'
-import {initialCards} from "./cards.js"
+import {initialCards} from "../components/cards.js"
 import {createCard, deleteCard, likeCard} from "../components/card.js"
 import {openPopup,
         closePopup, 
         openImagePopup} from "../components/modal.js"
 
-// @todo: DOM узлы
+
 const cardsList =
  document.querySelector('.places__list');
 const profileEditPopup =
@@ -34,7 +34,7 @@ const descriptionNewPlaceInput =
 const srcNewPlaceInput =
  formNewPlaceElement['link'];
 
-// @todo: Вывести карточки на страницу
+
 function createPageItems(){
     initialCards.forEach(item=>cardsList.append(createCard(item.name,
                                                            item.link,
