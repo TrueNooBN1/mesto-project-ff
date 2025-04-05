@@ -1,9 +1,8 @@
 import '../pages/index.css'
 import {initialCards} from "./cards.js"
 import {createCard, deleteCard, likeCard} from "../components/card.js"
-import {openPopup, 
-        handleEditProfileFormSubmit, 
-        // handleNewPlaceFormSubmit, 
+import {openPopup,
+        closePopup, 
         openImagePopup} from "../components/modal.js"
 
 // @todo: DOM узлы
@@ -13,11 +12,20 @@ const profileEditPopup =
  document.querySelector('.popup_type_edit');
 const editProfileButton =
  document.querySelector('.profile__edit-button');
+profileEditPopup['form-reset'] = true;
 
 const addContentToProfilePopup = 
  document.querySelector('.popup_type_new-card');
 const addContentToProfileButton =
  document.querySelector('.profile__add-button');
+addContentToProfilePopup['form-reset'] = true;
+
+const formEditElement =
+ document.forms['edit-profile'];
+const nameInput =
+ formEditElement.querySelector('.popup__input_type_name');
+const jobInput =
+ formEditElement.querySelector('.popup__input_type_description');
 
 const formNewPlaceElement =
  document.forms['new-place'];
@@ -35,29 +43,48 @@ function createPageItems(){
                                                            openImagePopup)));
 }
 
+function handleEditProfileFormSubmit(evt){
+  evt.preventDefault();
+
+  const profileTitle = 
+   document.querySelector('.profile__title');
+
+  const profileDescription = 
+   document.querySelector('.profile__description');
+
+  profileTitle.textContent =
+   nameInput.value;
+
+  profileDescription.textContent =
+   jobInput.value;
+  
+  formEditElement.reset();
+  closePopup(profileEditPopup);
+}
+
 function handleNewPlaceFormSubmit(evt){
   evt.preventDefault();
+
   cardsList.prepend(createCard(descriptionNewPlaceInput.value,
                                 srcNewPlaceInput.value,
                                 deleteCard,
                                 likeCard,
                                 openImagePopup))  
   formNewPlaceElement.reset();
-//   closePopup(formNewPlaceElement);
+  closePopup(addContentToProfilePopup);
 }
-
-
+//--------------------------------------------------------------
 
 createPageItems();
 
 editProfileButton.addEventListener('click',
-     ()=>{openPopup(profileEditPopup);});
-profileEditPopup.addEventListener('submit',
-     handleEditProfileFormSubmit); 
-
+     ()=>{openPopup(profileEditPopup, formEditElement);});
+formEditElement.addEventListener('submit',
+    handleEditProfileFormSubmit); 
+          
 addContentToProfileButton.addEventListener('click',
-     ()=>{openPopup(addContentToProfilePopup);});
-addContentToProfilePopup.addEventListener('submit',
-     handleNewPlaceFormSubmit); 
+    ()=>{openPopup(addContentToProfilePopup, formNewPlaceElement);});
+formNewPlaceElement.addEventListener('submit',
+    handleNewPlaceFormSubmit); 
 
 
