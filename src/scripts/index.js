@@ -1,34 +1,17 @@
 import '../pages/index.css';
 // import initialCards from "./../scripts/cards.js";
 import {initialCards} from "./cards.js"
-
-// @todo: Темплейт карточки
-const cardTemplate = document.querySelector('#card-template').content;
+import {createCard, deleteCard} from "../components/card.js"
+import {openPopup} from "../components/modal.js"
 
 // @todo: DOM узлы
 const cardsList = document.querySelector('.places__list');
+const profileEditPopup = document.querySelector('.popup_type_edit');
+const editProfileButton = document.querySelector('.profile__edit-button');
 
-// @todo: Функция создания карточки
-function createCard(description, link, deleteFunc){
-    const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
-    // cardElement.querySelector('card__image').src = 'tinyurl.com/v4pfzwy';
-    const cardImage = cardElement.querySelector('.card__image');
-    cardImage.src = link;
-    cardImage.alt = description;
-    
-    const cardTitle = cardElement.querySelector('.card__title');
-    cardTitle.textContent = description;
-    
-    const deleteButton = cardElement.querySelector('.card__delete-button');
-    deleteButton.addEventListener('click', ()=>deleteCard(cardElement));
+const addContentToProfilePopup = document.querySelector('.popup_type_new-card');
+const addContentToProfileButton = document.querySelector('.profile__add-button');
 
-    return cardElement;
-}
-
-// @todo: Функция удаления карточки
-function deleteCard(cardElement){
-    cardElement.remove();
-}
 
 // @todo: Вывести карточки на страницу
 function createPageItems(){
@@ -36,3 +19,9 @@ function createPageItems(){
 }
 
 createPageItems();
+
+editProfileButton.addEventListener('click', ()=>{openPopup(profileEditPopup);});
+
+addContentToProfileButton.addEventListener('click', ()=>{openPopup(addContentToProfilePopup);});
+
+
