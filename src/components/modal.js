@@ -1,7 +1,12 @@
 let openedPopup = {};
-const formElement = document.forms['edit-profile'];
-const nameInput = formElement.querySelector('.popup__input_type_name');
-const jobInput = formElement.querySelector('.popup__input_type_description');
+
+const formEditElement = document.forms['edit-profile'];
+const nameInput = formEditElement.querySelector('.popup__input_type_name');
+const jobInput = formEditElement.querySelector('.popup__input_type_description');
+
+const imagePopup = document.querySelector('.popup_type_image');
+const imagePopupImg = imagePopup.querySelector('.popup__image');
+const imagePopupCaption = imagePopup.querySelector('.popup__caption');
 
 function addKeyListenerToPopup(evt){
   if(evt.key === 'Escape'){
@@ -22,16 +27,22 @@ function closeOnBackDropClick({ currentTarget, target }) {
   }
 }
 
-function handleFormSubmit(evt){
+function handleEditProfileFormSubmit(evt){
   evt.preventDefault();
   const profileTitle = document.querySelector('.profile__title');
   const profileDescription = document.querySelector('.profile__description');
   profileTitle.textContent = nameInput.value;
   profileDescription.textContent = jobInput.value;
-  formElement.reset();
-  closePopup(formElement);
+  formEditElement.reset();
+  closePopup(formEditElement);
 }
 
+function openImagePopup(src, description){
+  imagePopupImg.src = src;
+  imagePopupImg.alt = description;
+  imagePopupCaption.textContent = description;
+  openPopup(imagePopup);
+}
 
 function openPopup(popup){
   openedPopup = popup;
@@ -42,8 +53,10 @@ function openPopup(popup){
   document.addEventListener('keydown', addKeyListenerToPopup)
   openedPopup.addEventListener('click', closeOnBackDropClick);
   closeBtn.addEventListener('click', ()=>{closePopup();})
-
-  popup.addEventListener('submit', handleFormSubmit); 
 }
 
-export {openPopup};
+export {openPopup,
+        handleEditProfileFormSubmit,
+        // handleNewPlaceFormSubmit, 
+        openImagePopup
+       };
