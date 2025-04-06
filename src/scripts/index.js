@@ -11,13 +11,11 @@ const profileEditPopup =
  document.querySelector('.popup_type_edit');
 const editProfileButton =
  document.querySelector('.profile__edit-button');
-profileEditPopup['form-reset'] = true;
 
 const addContentToProfilePopup = 
  document.querySelector('.popup_type_new-card');
 const addContentToProfileButton =
  document.querySelector('.profile__add-button');
-addContentToProfilePopup['form-reset'] = true;
 
 const formEditElement =
  document.forms['edit-profile'];
@@ -26,11 +24,24 @@ const nameInput =
 const jobInput =
  formEditElement.querySelector('.popup__input_type_description');
 
- const profileTitle = 
+const profileTitle = 
  document.querySelector('.profile__title');
-
 const profileDescription = 
  document.querySelector('.profile__description');
+
+const imagePopup = 
+ document.querySelector('.popup_type_image');
+const imagePopupImg =
+  imagePopup.querySelector('.popup__image');
+const imagePopupCaption =
+ imagePopup.querySelector('.popup__caption');
+
+const editPopupСloseBtn =
+ profileEditPopup.querySelector('.popup__close');
+const addContentСloseBtn =
+ addContentToProfilePopup.querySelector('.popup__close');
+const imagePopupСloseBtn =
+ imagePopup.querySelector('.popup__close');
 
 const formNewPlaceElement =
  document.forms['new-place'];
@@ -38,11 +49,6 @@ const descriptionNewPlaceInput =
  formNewPlaceElement['place-name'];
 const srcNewPlaceInput =
  formNewPlaceElement['link'];
-
-
-const imagePopup = document.querySelector('.popup_type_image');
-const imagePopupImg = imagePopup.querySelector('.popup__image');
-const imagePopupCaption = imagePopup.querySelector('.popup__caption');
  
 function openImagePopup(src, description){
   imagePopupImg.src = src;
@@ -112,4 +118,8 @@ addContentToProfileButton.addEventListener('click',
 formNewPlaceElement.addEventListener('submit',
   handleNewPlaceFormSubmit);
 
-
+editPopupСloseBtn.addEventListener('click', ()=>{closePopup(profileEditPopup);});
+addContentСloseBtn.addEventListener('click', ()=>{closePopup(addContentToProfilePopup);});
+imagePopupСloseBtn.addEventListener('click', ()=>{closePopup(imagePopup);});
+ 
+ 

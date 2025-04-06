@@ -21,13 +21,10 @@ function closeOnBackDropClick({ currentTarget, target }) {
 }
 
 function openPopup(popup){
-  const closeBtn = popup.querySelector('.popup__close');
-
   popup.classList.add('popup_is-opened');
   document['opened-popup'] = popup;
   document.addEventListener('keydown', addKeyListenerToPopup)
   popup.addEventListener('click', closeOnBackDropClick);
-  closeBtn.addEventListener('click', ()=>{closePopup(popup);}, { once: true });
 }
 
 export {openPopup,
