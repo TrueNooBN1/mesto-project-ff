@@ -118,8 +118,11 @@ addContentToProfileButton.addEventListener('click',
 formNewPlaceElement.addEventListener('submit',
   handleNewPlaceFormSubmit);
 
-editPopupСloseBtn.addEventListener('click', ()=>{closePopup(profileEditPopup);});
-addContentСloseBtn.addEventListener('click', ()=>{closePopup(addContentToProfilePopup);});
-imagePopupСloseBtn.addEventListener('click', ()=>{closePopup(imagePopup);});
+editPopupСloseBtn.addEventListener('click',
+  ()=>{closePopup(profileEditPopup);});
+addContentСloseBtn.addEventListener('click',
+  ()=>{closePopup(addContentToProfilePopup);});
+imagePopupСloseBtn.addEventListener('click',
+  ()=>{closePopup(imagePopup);});
  
  

@@ -9,7 +9,6 @@ function closePopup(popup){
   document.removeEventListener('keydown', addKeyListenerToPopup);
   popup.removeEventListener('click', closeOnBackDropClick);
   delete document['opened-popup'];
-  delete document['popupHasForm'];
 }
 
 function closeOnBackDropClick({ currentTarget, target }) {
