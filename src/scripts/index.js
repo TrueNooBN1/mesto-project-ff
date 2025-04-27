@@ -1,9 +1,18 @@
 import '../pages/index.css'
 import {initialCards} from "../components/cards.js"
 import {createCard, deleteCard, likeCard} from "../components/card.js"
-import {openPopup,
-        closePopup} from "../components/modal.js"
-
+import {openPopup, closePopup} from "../components/modal.js"
+import {enableValidation, clearValidation} from "../components/validation.js"
+import {getProfileInfo, patchProfileInfo} from "./api.js"
+  
+const validationConfigObject = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+};
 
 const cardsList =
  document.querySelector('.places__list');
@@ -93,14 +102,16 @@ function handleNewPlaceFormSubmit(evt){
 
 function openEditPopup(){
   openPopup(profileEditPopup);
-
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
+  
+  clearValidation(profileEditPopup, validationConfigObject);
 }
 
 function openAddContentPopup(){
   openPopup(addContentToProfilePopup);
   formNewPlaceElement.reset(); 
+  clearValidation(addContentToProfilePopup, validationConfigObject);
 }
 //--------------------------------------------------------------
 
@@ -124,5 +135,11 @@ addContentСloseBtn.addEventListener('click',
   ()=>{closePopup(addContentToProfilePopup);});
 imagePopupСloseBtn.addEventListener('click',
   ()=>{closePopup(imagePopup);});
- 
- 
+
+enableValidation(validationConfigObject);
+
+getProfileInfo()
+  .then((result) => {
+    console.log(result);
+  })
+  .catch(err=>console.log(err))
