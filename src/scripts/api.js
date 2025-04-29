@@ -7,13 +7,13 @@ const config = {
 }
 
 
-function getCard(){
+function getCards(){
   return fetch(config.baseUrl + '/cards', {
     headers: config.headers
   })
     .then(res =>{
       if(res.ok){
-        return res.json();
+        return res.json();тз
       }
       //отклоняем профис и выводим ошибку если статус не ок
       return Promise.reject(`Ошибка: ${res.status}`);
@@ -86,8 +86,8 @@ function addNewCard(cardName, imageLink){
     })
 }
 
-function deleteCard(id){
-  return fetch(config.baseUrl + '/cards/${id}', {
+function deleteCardQuery(id){
+  return fetch(config.baseUrl + `/cards/${id}`, {
     method: 'DELETE',
     headers: config.headers
   })
@@ -128,9 +128,9 @@ function dislikeCard(id){
     })
 }
 
-export {getCard,
+export {getCards,
         addNewCard,
-        deleteCard,
+        deleteCardQuery,
         getProfileInfo,
         patchProfileInfo,
         patchProfilePhoto,

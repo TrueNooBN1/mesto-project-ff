@@ -19,10 +19,16 @@
   cursor: pointer;
 }
 
+.popup__button:disabled {
+  background: rgba(0, 0, 0, 0.0);
+  color: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
 .popup__button_disabled {
-  color: red;
-  background: blue;
-  cursor: none;
+  background: rgba(0, 0, 0, 0.0);
+  color: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 @media screen and (max-width: 568px) {

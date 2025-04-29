@@ -49,7 +49,7 @@
           maxlength="40"
           pattern="^[a-zA-ZА-Яа-яЁё\-\s]+$" 
           data-error-message="Разрешены только латинские и кириллические буквы, знаки дефиса и пробелы">
-          <span class="popup__input_type_error name__input-error" ></span>
+          <span class="name__input-error" ></span>
         <input 
           type="text" 
           name="description" 
@@ -61,7 +61,7 @@
           maxlength="200"
           pattern="^[a-zA-ZА-Яа-яЁё\-\s]+$" 
           data-error-message="Разрешены только латинские и кириллические буквы, знаки дефиса и пробелы">
-          <span class="popup__input_type_error description__input-error" ></span>
+          <span class="description__input-error" ></span>
         <button type="submit" class="button popup__button">Сохранить</button>
       </form>
     </div>
@@ -82,7 +82,7 @@
           maxlength="30" 
           pattern="^[a-zA-ZА-Яа-яЁё\-\s]+$" 
           data-error-message="Разрешены только латинские и кириллические буквы, знаки дефиса и пробелы">
-          <span class="popup__input_type_error place-name__input-error" ></span>
+          <span class="place-name__input-error" ></span>
           <input 
           type="url" 
           name="link"
@@ -90,7 +90,7 @@
           class="popup__input popup__input_type_url" 
           placeholder="Ссылка на картинку" 
           required>
-          <span class="popup__input_type_error link__input-error" ></span>
+          <span class="link__input-error" ></span>
         <button type="submit" class="button popup__button">Сохранить</button>
       </form>
     </div>
@@ -111,7 +111,10 @@
     <div class="card__description">
       <h2 class="card__title">
       </h2>
-      <button type="button" class="card__like-button"></button>
+      <div class="card__like_container">
+        <button type="button" class="card__like-button"></button>
+        <p>0</p>
+      </div>
     </div>
   </li>
 </template>

@@ -3,7 +3,7 @@ import {initialCards} from "../components/cards.js"
 import {createCard, deleteCard, likeCard} from "../components/card.js"
 import {openPopup, closePopup} from "../components/modal.js"
 import {enableValidation, clearValidation} from "../components/validation.js"
-import {getProfileInfo, patchProfileInfo} from "./api.js"
+import {addNewCard, getCards, deleteCardQuery, getProfileInfo, patchProfileInfo} from "./api.js"
   
 const validationConfigObject = {
   formSelector: '.popup__form',
@@ -14,12 +14,16 @@ const validationConfigObject = {
   errorClass: 'popup__error_visible'
 };
 
+let myId = undefined;
+
 const cardsList =
  document.querySelector('.places__list');
+
 const profileEditPopup =
  document.querySelector('.popup_type_edit');
 const editProfileButton =
  document.querySelector('.profile__edit-button');
+
 
 const addContentToProfilePopup = 
  document.querySelector('.popup_type_new-card');
@@ -32,6 +36,8 @@ const nameInput =
  formEditElement.querySelector('.popup__input_type_name');
 const jobInput =
  formEditElement.querySelector('.popup__input_type_description');
+const formEditSaveButton = 
+ formEditElement.querySelector('.popup__button');
 
 const profileTitle = 
  document.querySelector('.profile__title');
@@ -41,7 +47,7 @@ const profileDescription =
 const imagePopup = 
  document.querySelector('.popup_type_image');
 const imagePopupImg =
-  imagePopup.querySelector('.popup__image');
+ imagePopup.querySelector('.popup__image');
 const imagePopupCaption =
  imagePopup.querySelector('.popup__caption');
 
@@ -58,6 +64,8 @@ const descriptionNewPlaceInput =
  formNewPlaceElement['place-name'];
 const srcNewPlaceInput =
  formNewPlaceElement['link'];
+const formNewPlaceSaveButton = 
+ formNewPlaceElement.querySelector('.popup__button');
  
 function openImagePopup(src, description){
   imagePopupImg.src = src;
@@ -66,38 +74,52 @@ function openImagePopup(src, description){
   openPopup(imagePopup);
 }
 
-
-function createPageItems(){
-    initialCards.forEach(item=>cardsList.append(createCard(item.name,
-                                                           item.link,
-                                                           deleteCard,
-                                                           likeCard,
-                                                           openImagePopup)));
-}
-
 function handleEditProfileFormSubmit(evt){
   evt.preventDefault();
+  formEditSaveButton.textContent = "Сохранение...";
+  patchProfileInfo(nameInput.value, jobInput.value)
+    .then((result)=>{
+      console.log(result);
+      profileTitle.textContent =
+        result.name;
 
-  profileTitle.textContent =
-   nameInput.value;
+      profileDescription.textContent =
+        result.about;
 
-  profileDescription.textContent =
-   jobInput.value;
-  
-  formEditElement.reset();
-  closePopup(profileEditPopup);
+      formEditSaveButton.textContent = "Сохранение";
+      formEditElement.reset();
+      closePopup(profileEditPopup);  
+    })
+    .catch(err=>console.log(err))
+  }
+
+function deleteCardFromServer(cardElement){
+  console.log(cardElement['cardId']);
+  deleteCardQuery(cardElement['cardId'])
+  .then(result=>{
+    // console.log(result);
+    deleteCard(cardElement);
+  })
+  .catch(err=>console.log(err))
 }
+
 
 function handleNewPlaceFormSubmit(evt){
   evt.preventDefault();
+  formNewPlaceSaveButton.textContent = "Сохранение...";
+  addNewCard(descriptionNewPlaceInput.value, srcNewPlaceInput.value)
+    .then(result=>{
+      cardsList.prepend(createCard(getCardInitObj(result),
+        deleteCardFromServer,
+        likeCard,
+        openImagePopup)
+      )
+      formNewPlaceSaveButton.textContent = "Сохранение";
+      formNewPlaceElement.reset();
+      closePopup(addContentToProfilePopup);
+    })
+    .catch(err=>console.log(err))
 
-  cardsList.prepend(createCard(descriptionNewPlaceInput.value,
-                                srcNewPlaceInput.value,
-                                deleteCard,
-                                likeCard,
-                                openImagePopup))  
-  formNewPlaceElement.reset();
-  closePopup(addContentToProfilePopup);
 }
 
 function openEditPopup(){
@@ -113,9 +135,62 @@ function openAddContentPopup(){
   formNewPlaceElement.reset(); 
   clearValidation(addContentToProfilePopup, validationConfigObject);
 }
-//--------------------------------------------------------------
 
-createPageItems();
+
+/*
+initObj = {
+  link: responseItem.link,
+  description: responseItem.name,
+  cardId: responseItem._id,
+  autorId: responseItem.owner._id,
+  deleteAllowed: (responseItem.owner._id == myId),
+  likesCount: responseItem.likes.length, 
+  liked: responseItem.likes.some((item)=>{return item._id === myId})
+}
+*/
+
+function getCardInitObj(responseItem){
+  return {
+    link: responseItem.link,
+    description: responseItem.name,
+    cardId: responseItem._id,
+    autorId: responseItem.owner._id,
+    deleteAllowed: (responseItem.owner._id == myId),
+    likesCount: responseItem.likes.length, 
+    liked: responseItem.likes.some((item)=>{return item._id === myId}),
+    deleteCard: deleteCardFromServer,
+    likeCard: likeCard,
+    openImagePopup: openImagePopup
+  };
+}
+
+function loadPage(){
+  Promise.all([getProfileInfo(), getCards()])
+    .then((result) => {
+      //--> load profileInfo block
+      profileTitle.textContent = 
+        result[0].name;
+      profileDescription.textContent =
+        result[0].about;
+      myId = result[0]._id;
+      //--> end load profileInfo block
+      //--> load card block
+      // console.log(result[1]);
+      result[1].forEach(item=>{
+        cardsList.append(createCard(getCardInitObj(item),
+          deleteCardFromServer,
+          likeCard,
+          openImagePopup)
+        )
+      })      
+      //--> end load card block
+    })
+    .catch(err=>console.log(err))
+}
+    
+//-------------------END_DEFINITION-----------------------------
+
+loadPage();
 
 editProfileButton.addEventListener('click',
   openEditPopup);
@@ -137,9 +212,3 @@ imagePopupСloseBtn.addEventListener('click',
   ()=>{closePopup(imagePopup);});
 
 enableValidation(validationConfigObject);
-
-getProfileInfo()
-  .then((result) => {
-    console.log(result);
-  })
-  .catch(err=>console.log(err))
