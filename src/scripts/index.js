@@ -27,6 +27,15 @@ let myId = undefined;
 const cardsList =
  document.querySelector('.places__list');
 
+const avatarElement = 
+ document.querySelector('.profile__image');
+const editAvatarPopup = 
+ document.querySelector('.popup_type_avatar_edit');
+const formNewAvatar =
+ document.forms['edit-profile_avatar'];
+const avatarEditPopupСloseBtn =
+ editAvatarPopup.querySelector('.popup__close');
+
 const profileEditPopup =
  document.querySelector('.popup_type_edit');
 const editProfileButton =
@@ -74,38 +83,11 @@ const srcNewPlaceInput =
  formNewPlaceElement['link'];
 const formNewPlaceSaveButton = 
  formNewPlaceElement.querySelector('.popup__button');
- 
-function openImagePopup(src, description){
-  imagePopupImg.src = src;
-  imagePopupImg.alt = description;
-  imagePopupCaption.textContent = description;
-  openPopup(imagePopup);
-}
-
-function handleEditProfileFormSubmit(evt){
-  evt.preventDefault();
-  formEditSaveButton.textContent = "Сохранение...";
-  patchProfileInfo(nameInput.value, jobInput.value)
-    .then((result)=>{
-      console.log(result);
-      profileTitle.textContent =
-        result.name;
-
-      profileDescription.textContent =
-        result.about;
-
-      formEditSaveButton.textContent = "Сохранение";
-      formEditElement.reset();
-      closePopup(profileEditPopup);  
-    })
-    .catch(err=>console.log(err))
-  }
 
 function deleteCardFromServer(cardElement){
   console.log(cardElement['cardId']);
   deleteCardQuery(cardElement['cardId'])
   .then(result=>{
-    // console.log(result);
     deleteCard(cardElement);
   })
   .catch(err=>console.log(err))
@@ -127,7 +109,25 @@ function likeFunc(likeButton, likeCounter, cardId){
       .catch(err=>console.log(err))
   }
 }
+ 
+function handleEditProfileFormSubmit(evt){
+  evt.preventDefault();
+  formEditSaveButton.textContent = "Сохранение...";
+  patchProfileInfo(nameInput.value, jobInput.value)
+    .then((result)=>{
+      console.log(result);
+      profileTitle.textContent =
+        result.name;
 
+      profileDescription.textContent =
+        result.about;
+
+      formEditSaveButton.textContent = "Сохранение";
+      formEditElement.reset();
+      closePopup(profileEditPopup);  
+    })
+    .catch(err=>console.log(err))
+}
 
 function handleNewPlaceFormSubmit(evt){
   evt.preventDefault();
@@ -161,18 +161,19 @@ function openAddContentPopup(){
   clearValidation(addContentToProfilePopup, validationConfigObject);
 }
 
-
-/*
-initObj = {
-  link: responseItem.link,
-  description: responseItem.name,
-  cardId: responseItem._id,
-  autorId: responseItem.owner._id,
-  deleteAllowed: (responseItem.owner._id == myId),
-  likesCount: responseItem.likes.length, 
-  liked: responseItem.likes.some((item)=>{return item._id === myId})
+function openImagePopup(src, description){
+  imagePopupImg.src = src;
+  imagePopupImg.alt = description;
+  imagePopupCaption.textContent = description;
+  openPopup(imagePopup);
 }
-*/
+
+function openAvatarEditPopup(){
+  console.log(editAvatarPopup);
+  openPopup(editAvatarPopup);
+  formNewAvatar.reset(); 
+  clearValidation(editAvatarPopup, validationConfigObject);
+}
 
 function getCardInitObj(responseItem){
   return {
@@ -226,11 +227,16 @@ addContentToProfileButton.addEventListener('click',
 formNewPlaceElement.addEventListener('submit',
   handleNewPlaceFormSubmit);
 
+avatarElement.addEventListener('click',
+  openAvatarEditPopup); 
+
 editPopupСloseBtn.addEventListener('click',
   ()=>{closePopup(profileEditPopup);});
 addContentСloseBtn.addEventListener('click',
   ()=>{closePopup(addContentToProfilePopup);});
 imagePopupСloseBtn.addEventListener('click',
   ()=>{closePopup(imagePopup);});
-
+avatarEditPopupСloseBtn.addEventListener('click',
+  ()=>{closePopup(editAvatarPopup);});
+  
 enableValidation(validationConfigObject);
