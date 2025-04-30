@@ -3,7 +3,15 @@ import {initialCards} from "../components/cards.js"
 import {createCard, deleteCard, likeCard} from "../components/card.js"
 import {openPopup, closePopup} from "../components/modal.js"
 import {enableValidation, clearValidation} from "../components/validation.js"
-import {addNewCard, getCards, deleteCardQuery, getProfileInfo, patchProfileInfo} from "./api.js"
+import {getCards,
+        addNewCard,
+        deleteCardQuery,
+        getProfileInfo,
+        patchProfileInfo,
+        patchProfilePhoto,
+        likeCardQuery,
+        dislikeCardQuery
+        } from "./api.js"
   
 const validationConfigObject = {
   formSelector: '.popup__form',
@@ -103,6 +111,23 @@ function deleteCardFromServer(cardElement){
   .catch(err=>console.log(err))
 }
 
+function likeFunc(likeButton, likeCounter, cardId){
+  likeButton.liked = !likeButton.liked;
+  if(!likeButton.liked){
+    dislikeCardQuery(cardId)
+      .then((result)=>{
+        likeCard(likeButton, likeCounter, result.likes.length);
+      })
+      .catch(err=>console.log(err))
+  }else{
+    likeCardQuery(cardId)
+      .then((result)=>{
+        likeCard(likeButton, likeCounter, result.likes.length);
+      })
+      .catch(err=>console.log(err))
+  }
+}
+
 
 function handleNewPlaceFormSubmit(evt){
   evt.preventDefault();
@@ -111,7 +136,7 @@ function handleNewPlaceFormSubmit(evt){
     .then(result=>{
       cardsList.prepend(createCard(getCardInitObj(result),
         deleteCardFromServer,
-        likeCard,
+        likeFunc,
         openImagePopup)
       )
       formNewPlaceSaveButton.textContent = "Сохранение";
@@ -157,10 +182,7 @@ function getCardInitObj(responseItem){
     autorId: responseItem.owner._id,
     deleteAllowed: (responseItem.owner._id == myId),
     likesCount: responseItem.likes.length, 
-    liked: responseItem.likes.some((item)=>{return item._id === myId}),
-    deleteCard: deleteCardFromServer,
-    likeCard: likeCard,
-    openImagePopup: openImagePopup
+    liked: responseItem.likes.some((item)=>{return item._id === myId})
   };
 }
 
@@ -179,7 +201,7 @@ function loadPage(){
       result[1].forEach(item=>{
         cardsList.append(createCard(getCardInitObj(item),
           deleteCardFromServer,
-          likeCard,
+          likeFunc,
           openImagePopup)
         )
       })      

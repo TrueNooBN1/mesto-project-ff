@@ -100,13 +100,14 @@ function deleteCardQuery(id){
     })
 }
 
-function likeCard(id){
-  return fetch(config.baseUrl + '/cards/likes/${id}', {
+function likeCardQuery(id){
+  return fetch(config.baseUrl + `/cards/likes/${id}`, {
     method: 'PUT',
     headers: config.headers
   })
     .then(res =>{
       if(res.ok){
+        console.log("uuuuu" + res);
         return res.json();
       }
       //отклоняем профис и выводим ошибку если статус не ок
@@ -114,8 +115,8 @@ function likeCard(id){
     })
 }
 
-function dislikeCard(id){
-  return fetch(config.baseUrl + '/cards/likes/${id}', {
+function dislikeCardQuery(id){
+  return fetch(config.baseUrl + `/cards/likes/${id}`, {
     method: 'DELETE',
     headers: config.headers
   })
@@ -134,6 +135,6 @@ export {getCards,
         getProfileInfo,
         patchProfileInfo,
         patchProfilePhoto,
-        likeCard,
-        dislikeCard
+        likeCardQuery,
+        dislikeCardQuery
       };

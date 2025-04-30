@@ -13,7 +13,7 @@ initObj = {
 */
 
 function createCard(initObj, deleteFunc, likeFunc, openPopupFunc){
-  console.log(initObj);
+  // console.log(initObj);
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
   const cardImage = cardElement.querySelector('.card__image');
 
@@ -21,6 +21,7 @@ function createCard(initObj, deleteFunc, likeFunc, openPopupFunc){
   cardImage.alt = initObj.description;
   cardElement['cardId'] = initObj.cardId;
   cardElement['autoId'] = initObj.autorId;
+  cardElement['likesCount'] = initObj.likesCount;
   
   const cardTitle = cardElement.querySelector('.card__title');
   cardTitle.textContent = initObj.description;
@@ -33,7 +34,15 @@ function createCard(initObj, deleteFunc, likeFunc, openPopupFunc){
   }
 
   const likeButton = cardElement.querySelector('.card__like-button');
-  likeButton.addEventListener('click', ()=>likeFunc(likeButton));
+  likeButton['liked'] = initObj.liked;
+  const likeCounter = cardElement.querySelector('.card__like-counter');
+
+  likeButton.addEventListener('click', ()=>likeFunc(likeButton, likeCounter, initObj.cardId));
+  if(initObj.liked){
+    likeCard(likeButton, likeCounter, initObj.likesCount);
+  }else{
+    likeCounter.textContent = initObj.likesCount;
+  }
 
   cardImage.addEventListener("click", ()=>openPopupFunc(initObj.link, initObj.description));
 
@@ -44,8 +53,9 @@ function deleteCard(cardElement){
   cardElement.remove();
 }
 
-function likeCard(likeButton){
+function likeCard(likeButton, likeCounter, likesCount){
   likeButton.classList.toggle("card__like-button_is-active");
+  likeCounter.textContent = likesCount;
 }
 
 export {createCard, deleteCard, likeCard};
