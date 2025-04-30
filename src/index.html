@@ -17,9 +17,9 @@
     <section class="profile page__section">
       <div class="profile__image"></div>
       <div class="profile__info">
-        <h1 class="profile__title">Жак-Ив Кусто</h1>
+        <h1 class="profile__title"></h1>
         <button class="profile__edit-button" type="button"></button>
-        <p class="profile__description">Исследователь океана</p>
+        <p class="profile__description"></p>
       </div>
       <button class="profile__add-button" type="button"></button>
     </section>
@@ -102,7 +102,7 @@
       <p class="popup__caption"></p>
     </div>
   </div>
-  <div class="popup popup_type_avatar_edit">
+  <div class="popup popup_type_edit-avatar">
     <div class="popup__content">
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Обновить аватар</h3>
@@ -116,6 +116,15 @@
         required>
         <span class="link__input-error" ></span>
         <button type="submit" class="button popup__button">Сохранить</button>
+      </form>
+    </div>
+  </div>
+  <div class="popup popup_type_delete-card">
+    <div class="popup__content">
+      <button type="button" class="popup__close"></button>
+      <h3 class="popup__title">Вы уверены?</h3>
+      <form class="popup__form" name="delete-card">
+        <button type="submit" class="button popup__button">Да</button>
       </form>
     </div>
   </div>

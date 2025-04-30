@@ -6,6 +6,14 @@ const config = {
   }
 }
 
+function checkImg(url){
+  return fetch(url, {
+    method: 'HEAD'
+  })
+  .then(res =>{
+    return res;
+  })
+}
 
 function getCards(){
   return fetch(config.baseUrl + '/cards', {
@@ -136,5 +144,6 @@ export {getCards,
         patchProfileInfo,
         patchProfilePhoto,
         likeCardQuery,
-        dislikeCardQuery
+        dislikeCardQuery,
+        checkImg
       };
