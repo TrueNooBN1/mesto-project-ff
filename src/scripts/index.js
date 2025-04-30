@@ -12,7 +12,7 @@ import {getCards,
         likeCardQuery,
         dislikeCardQuery,
         checkImg
-        } from "./api.js"
+        } from "../components/api.js"
 //------------------------------------------------------
 const validationConfigObject = {
   formSelector: '.popup__form',
@@ -105,11 +105,11 @@ function handleEditProfileFormSubmit(evt){
       profileDescription.textContent =
         result.about;
 
-      formEditSaveButton.textContent = "Сохранить";
       formEditElement.reset();
       closePopup(profileEditPopup);  
     })
     .catch(err=>console.log(err))
+    .finally(()=>{formEditSaveButton.textContent = "Сохранить";})
 }
 //------------------------------------------------------
 function handleEditAvatarFormSubmit(evt){
@@ -123,13 +123,13 @@ function handleEditAvatarFormSubmit(evt){
       patchProfilePhoto(newUrl)
       .then(result=>{
         updateAvatar(result.avatar);
-        formEditAvatarSaveButton.textContent = "Сохранить";
         formEditAvatar.reset();
         closePopup(editAvatarPopup);
       })
       .catch(err=>console.log(err))
     }
   })
+  .finally(()=>{formEditAvatarSaveButton.textContent = "Сохранить";})
 }
 //------------------------------------------------------
 function handleNewPlaceFormSubmit(evt){
@@ -143,18 +143,11 @@ function handleNewPlaceFormSubmit(evt){
         likeFunc,
         openImagePopup)
       )
-      formNewPlaceSaveButton.textContent = "Сохранить";
       formNewPlaceElement.reset();
       closePopup(addContentToProfilePopup);
     })
     .catch(err=>console.log(err))
-}
-//------------------------------------------------------
-function handleDeleteCardForm(evt){
-  evt.preventDefault();
-  cardDeleteForm.removeEventListener('submit',
-    handleDeleteCardForm);  
-  deleteCardFromServer(cardDeleteForm.cardElement)
+    .finally(()=>{formNewPlaceSaveButton.textContent = "Сохранить";})
 }
 //--------------OPEN_POPUP_FUNCS------------------------------
 function openEditPopup(){
@@ -185,8 +178,6 @@ function openAvatarEditPopup(){
 //------------------------------------------------------
 function openDeleteDialog(cardElement){
   cardDeleteForm.cardElement = cardElement;
-  cardDeleteForm.addEventListener('submit',
-    handleDeleteCardForm);  
   openPopup(cardDeleteDialog);
 }
 //-----------------FUNCS_DEFINITION----------------------------
@@ -197,22 +188,23 @@ function deleteCardFromServer(cardElement){
   .then(result=>{
     deleteCard(cardElement);
     closePopup(cardDeleteDialog);
-    cardDeleteDialogAcceptBtn.textContent = "Да"
   })
-  .catch(err=>{console.log(err);cardDeleteDialogAcceptBtn.textContent = "Да";})
+  .catch(err=>{console.log(err);})
+  .finally(()=>{cardDeleteDialogAcceptBtn.textContent = "Да"})
 }
 //------------------------------------------------------
 function likeFunc(likeButton, likeCounter, cardId){
-  likeButton.liked = !likeButton.liked;
-  if(!likeButton.liked){
+  if(likeButton.liked){
     dislikeCardQuery(cardId)
       .then((result)=>{
+        likeButton.liked = !likeButton.liked;
         likeCard(likeButton, likeCounter, result.likes.length);
       })
       .catch(err=>console.log(err))
   }else{
     likeCardQuery(cardId)
       .then((result)=>{
+        likeButton.liked = !likeButton.liked;
         likeCard(likeButton, likeCounter, result.likes.length);
       })
       .catch(err=>console.log(err))
@@ -292,5 +284,7 @@ avatarEditPopupСloseBtn.addEventListener('click',
   ()=>{closePopup(editAvatarPopup);});
 cardDeleteDialogСloseBtn.addEventListener('click',
   ()=>{closePopup(cardDeleteDialog);});
-    
+cardDeleteForm.addEventListener('submit',
+  ()=>{deleteCardFromServer(cardDeleteForm.cardElement);});  
+      
 enableValidation(validationConfigObject);
